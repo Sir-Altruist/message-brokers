@@ -40,10 +40,10 @@ class RabbitMQ {
         })
 
         // Limit unacknowledged messages to 1 per consumer
-        this.#channel.prefetch(1); // This prevents consumers from having backlogs of task queues i.e round-robin
+        this.#channel.prefetch(1); // This prevents consumers from having backlogs of task queues i.e like round-robin method
 
         console.log("Waiting for messages...");
-
+        let totalTime = 0
         /** This consumes the message from the queue */
         this.#channel.consume(queue, async (msg) => {
             if(msg !== null){
@@ -56,6 +56,8 @@ class RabbitMQ {
                 console.log('consumer time: ', time)
                 await new Promise(resolve => setTimeout(resolve, time));
                 console.log("Done processing:", content);
+                totalTime += time
+                console.log(`It takes total time of ${totalTime} to consume all tasks`)
 
                 this.#channel.ack(msg)
 
@@ -63,6 +65,7 @@ class RabbitMQ {
         }, {
             noAck: false // required if you're acknowledging manually
         })
+
     }
 }
 

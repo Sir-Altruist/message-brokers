@@ -26,7 +26,7 @@ class RabbitMQ {
 
         /** Create the main and alternative exchange */
         await this.#channel.assertExchange('alt_exchange', 'fanout', { durable: true })
-        await this.#channel.assertExchange('main-exchange', 'direct', {
+        await this.#channel.assertExchange('main_exchange', 'direct', {
             durable: true,
             arguments: {
                 'alternate-exchange': 'alt_exchange'
@@ -34,7 +34,7 @@ class RabbitMQ {
         })
 
         const msg = "Hello! this is my first message"
-        this.#channel.publish('main-exchange', 'simple', Buffer.from(JSON.stringify(msg)))
+        this.#channel.publish('main_exchange', 'test', Buffer.from(JSON.stringify(msg)))
         console.log(`Sent ${JSON.stringify(msg)} from publisher`)
 
         /** Close connection after 5 seconds */

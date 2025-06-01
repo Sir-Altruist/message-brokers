@@ -50,14 +50,17 @@ class RabbitMQ {
         })
 
 
-        /** Create and bind main exchange queue */
+        /** Create and bind main exchange queue
+         * If the routing key matches and there's no issue whatsoever, 
+         * it will route to the main exchange instead of the alternate exchange
+         */
         await this.#channel.assertQueue('main-exchange-queue', {
             exclusive: true
         })
-        /** bind queue to an exchange */
+        /** bind queue to an exchange. */
         await this.#channel.bindQueue('main-exchange-queue', 'main_exchange', 'test')
 
-        /** This publishes the message to the queue */
+        /** This consumes the messages from the queue */
         this.#channel.consume('main-exchange-queue', (msg) => {
             if(msg !== null){
                 console.log(`Main exchange received a new message: ${msg.content.toString()}`)

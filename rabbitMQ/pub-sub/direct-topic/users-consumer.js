@@ -41,7 +41,7 @@ class RabbitMQ {
         /** bind queue to an exchange */
         await this.#channel.bindQueue(queue.queue, exchangeName, routingKey)
 
-        /** This publishes the message to the queue */
+        /** This consumes from the queue */
         this.#channel.consume(queue.queue, (msg) => {
             if(msg !== null){
                 console.log(`Users service received ${msg.content.toString()} from publisher`)

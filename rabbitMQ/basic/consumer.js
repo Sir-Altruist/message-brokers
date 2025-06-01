@@ -39,7 +39,7 @@ class RabbitMQ {
             durable: false
         })
 
-        /** This publishes the message to the queue */
+        /** This consumes the message from the queue */
         this.#channel.consume(queue, (msg) => {
             if(msg !== null){
                 console.log(`Received ${msg.content.toString()} in consumer`)
@@ -51,11 +51,6 @@ class RabbitMQ {
         }, {
             noAck: false
         })
-
-        /** Close connection after 5 seconds */
-        // setTimeout(() => {
-        //     this.#connection.close()
-        // }, 5000)
     }
 }
 

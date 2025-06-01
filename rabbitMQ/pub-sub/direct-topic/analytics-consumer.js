@@ -42,7 +42,7 @@ class RabbitMQ {
         /** bind queue to an exchange */
         await this.#channel.bindQueue(queue.queue, exchangeName, routingKey)
 
-        /** This publishes the message to the queue */
+        /** This consumes messages from the queue */
         this.#channel.consume(queue.queue, (msg) => {
             if(msg !== null){
                 console.log(`Analytics service received ${msg.content.toString()} from publisher`)

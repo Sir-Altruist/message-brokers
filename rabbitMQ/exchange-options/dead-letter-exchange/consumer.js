@@ -45,7 +45,7 @@ class RabbitMQ {
         /** bind dead-letter queue */
         await this.#channel.bindQueue('dead-letter-queue', 'dead_letter_exchange', '')
 
-        /** This publishes the message to the queue */
+        /** This publishes the message to the dead-letter queue after expiry */
         this.#channel.consume('dead-letter-queue', (msg) => {
             if(msg !== null){
                 console.log(`Dead letter exchange received a new message: ${msg.content.toString()}`)
@@ -54,7 +54,9 @@ class RabbitMQ {
             noAck: true
         })
 
-        /** This publishes the message to the queue (optional) */
+        /** This publishes the message to the queue (optional)
+         * If we declare this, message will come here instead of dead letter queue as it will be consumed by the main queue before it expires
+         */
         this.#channel.consume('main-exchange-queue', (msg) => {
             if(msg !== null){
                 console.log(`Main exchange received a new message: ${msg.content.toString()}`)

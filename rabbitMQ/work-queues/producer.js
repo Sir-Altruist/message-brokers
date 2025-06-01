@@ -37,7 +37,6 @@ class RabbitMQ {
          * Use 'durable: true' for persistent exchange
          **/
         const queue = 'task_queue'
-        // const msg = process.argv.slice(2).join(' ') || "Hello World!";
         const msg = `Handling task number ${task} in ${time} milliseconds`;
 
 
@@ -45,7 +44,7 @@ class RabbitMQ {
             durable: true
         })
 
-        /** This publishes the message to the queue */
+        /** This publishes the message to the queue and persists the message beyond broker server restart */
         this.#channel.sendToQueue(queue, Buffer.from(JSON.stringify(msg)), {
             persistent: true
         })
@@ -54,8 +53,12 @@ class RabbitMQ {
 }
 
 const producer = new RabbitMQ()
+let totalTime = 0
 for(let i = 1; i <= 10; i++){
     /** Assuming the publisher pushes to the queue in 1 - 3 seconds consistently */
     const time = parseInt(`${Math.floor(Math.random() * 3) + 1}000`);
     setTimeout(() => producer.publishMessage(i, time), time)
+    totalTime += time
 }
+
+console.log(`It takes total time of ${totalTime} to publish all tasks`)
